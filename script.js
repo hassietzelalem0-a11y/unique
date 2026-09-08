@@ -4,8 +4,8 @@
 const COSMIC_CONFIG = {
   nickname: "Unique",
   authorName: "Hassiet",
-  originDate: "August 8, 2026",
-  birthdayDate: "September 10",
+  originDate: "august 9, 2026",
+  birthdayDate: "september 11",
   locationName: "Addis Ababa, Ethiopia",
 
   // Audio track configured for "Sure Thing - Miguel" in audio/song.mp3
