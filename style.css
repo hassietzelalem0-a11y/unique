@@ -1,0 +1,1061 @@
+/* =========================================================================
+   COSMIC LUXURY PALETTE & GLASSMORPHISM
+   ========================================================================= */
+:root {
+  --space-black: #04060f;
+  --nebula-purple: #160c2e;
+  --gold-glow: #fef08a;
+  --amethyst: #a855f7;
+  --ethiopian-yellow: #facc15;
+  --kiss-pink: #f43f5e;
+  --saturn-gold: #fde68a;
+  --glass-tint: rgba(12, 17, 38, 0.76);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --text-pure: #f8fafc;
+  --text-soft: #cbd5e1;
+  --text-dim: #94a3b8;
+  --font-cinzel: 'Cinzel', serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-sans: 'Outfit', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--space-black);
+  color: var(--text-pure);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+  user-select: none;
+}
+
+/* Starfield & Addis Ababa Constellations Canvas */
+#universeCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+.cosmic-dust-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.16) 0%, transparent 55%),
+    radial-gradient(circle at 85% 75%, rgba(37, 99, 235, 0.14) 0%, transparent 55%),
+    radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* HEADER CONTROLS BAR */
+.header-bar {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.header-bar > * {
+  pointer-events: auto;
+}
+
+.header-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Sky Locator Pill */
+.sky-locator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 20, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-size: 0.76rem;
+  letter-spacing: 0.5px;
+  color: var(--gold-glow);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.radar-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: radarBlink 1.8s infinite;
+}
+
+@keyframes radarBlink {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Stargaze Alone Mode Button */
+.stargaze-toggle-btn {
+  background: rgba(14, 20, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(254, 240, 138, 0.4);
+  color: var(--gold-glow);
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.78rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(254, 240, 138, 0.15);
+  transition: all 0.3s ease;
+}
+
+.stargaze-toggle-btn:hover {
+  transform: scale(1.04);
+  background: rgba(30, 41, 79, 0.85);
+  box-shadow: 0 4px 20px rgba(254, 240, 138, 0.35);
+}
+
+/* Pure Stargazing Mode Exit Hint */
+.stargaze-exit-hint {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: rgba(10, 15, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  color: #fff;
+  letter-spacing: 1px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+body.stargaze-active .stargaze-exit-hint {
+  opacity: 1;
+}
+
+body.stargaze-active .chapter,
+body.stargaze-active .header-bar,
+body.stargaze-active .cosmos-lightbox,
+body.stargaze-active .reward-overlay {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Stargazer Note */
+.stargazer-note {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.highlight-sky {
+  color: #fff;
+  font-weight: 500;
+  margin-top: 6px;
+  text-shadow: 0 0 10px rgba(254, 240, 138, 0.3);
+}
+
+/* Audio Widget */
+.audio-widget {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(18, 24, 48, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  padding: 8px 16px;
+  border-radius: 40px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.audio-waves {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 14px;
+}
+
+.audio-waves span {
+  width: 3px;
+  height: 6px;
+  background: var(--amethyst);
+  border-radius: 2px;
+  transition: height 0.2s;
+}
+
+.audio-widget.playing .audio-waves span:nth-child(1) { animation: wave 0.8s infinite alternate; }
+.audio-widget.playing .audio-waves span:nth-child(2) { animation: wave 1.2s infinite alternate 0.2s; }
+.audio-widget.playing .audio-waves span:nth-child(3) { animation: wave 0.9s infinite alternate 0.4s; }
+.audio-widget.playing .audio-waves span:nth-child(4) { animation: wave 1.1s infinite alternate 0.1s; }
+
+@keyframes wave {
+  0% { height: 4px; }
+  100% { height: 16px; }
+}
+
+.audio-caption {
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+}
+
+/* Chapters Layout */
+.chapter {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chapter.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* Glassmorphism Cards */
+.nebula-glass-card {
+  background: var(--glass-tint);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(255, 255, 255, 0.03);
+  max-width: 620px;
+  width: 100%;
+  position: relative;
+}
+
+/* Typography */
+.cinzel-title {
+  font-family: var(--font-cinzel);
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.cinzel-title span {
+  font-family: var(--font-playfair);
+  font-weight: 400;
+  font-size: 1.25rem;
+  font-style: italic;
+  display: block;
+  color: var(--text-soft);
+  margin-top: 10px;
+}
+
+.celestial-tag {
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #c084fc;
+  margin-bottom: 12px;
+}
+
+.letter-verse {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text-soft);
+  margin: 18px 0;
+}
+
+.letter-verse p {
+  margin-bottom: 14px;
+}
+
+.luminous-text {
+  color: #ffffff !important;
+  font-weight: 500;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+.whisper-hint {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 12px;
+}
+
+.gold-title {
+  color: var(--gold-glow);
+  text-shadow: 0 0 25px rgba(254, 240, 138, 0.4);
+}
+
+/* Cosmic Button */
+.orb-btn {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.85) 0%, rgba(79, 70, 229, 0.85) 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 14px 30px;
+  border-radius: 35px;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  box-shadow: 0 6px 25px rgba(124, 58, 237, 0.4);
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.orb-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 35px rgba(168, 85, 247, 0.6);
+}
+
+.glow-spin {
+  animation: auraPulse 3s infinite alternate;
+}
+
+@keyframes auraPulse {
+  0% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.4); }
+  100% { box-shadow: 0 0 35px rgba(244, 63, 94, 0.7); }
+}
+
+/* Ethiopian Accents */
+.subtle-ethiopian-star {
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: var(--ethiopian-yellow);
+  margin-bottom: 12px;
+}
+
+.enkutatash-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.adey-flower {
+  font-size: 1.3rem;
+  animation: spinSlow 12s linear infinite;
+}
+
+.cross-year {
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  color: var(--ethiopian-yellow);
+  font-weight: 600;
+}
+
+@keyframes spinSlow {
+  100% { transform: rotate(360deg); }
+}
+
+/* Constellation Graphic (Chapter 2) */
+.floating-constellation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.star-node {
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.star-node.pulse {
+  color: var(--amethyst);
+  animation: starBreathe 2s infinite ease-in-out;
+}
+
+.star-beam {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+}
+
+@keyframes starBreathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px #fff); }
+  50% { transform: scale(1.3); filter: drop-shadow(0 0 15px var(--amethyst)); }
+}
+
+/* Dossier (Chapter 3) */
+.dossier-frame {
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  background: rgba(14, 18, 38, 0.78);
+}
+
+.dossier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  color: #a78bfa;
+}
+
+.narrative-stream {
+  line-height: 1.8;
+  color: var(--text-soft);
+  font-size: 1.05rem;
+  margin: 15px 0;
+}
+
+.narrative-stream .highlight {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+.classified-capsule {
+  background: rgba(8, 12, 28, 0.8);
+  border: 1px dashed rgba(168, 85, 247, 0.5);
+  border-radius: 18px;
+  padding: 22px;
+  margin: 22px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.capsule-front {
+  text-align: center;
+  color: #e9d5ff;
+}
+
+.capsule-front .lock-icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.capsule-revealed {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.confession-quote {
+  font-style: italic;
+  color: #f1f5f9;
+  margin-bottom: 10px;
+}
+
+.confession-comment {
+  color: #c084fc;
+  font-weight: 500;
+}
+
+/* CHAPTER 4: VAULT & RELIC */
+.vault-container {
+  width: 100%;
+  max-width: 620px;
+  margin: auto;
+}
+
+.subtle-badge {
+  font-size: 0.75rem;
+  letter-spacing: 2.5px;
+  color: #a855f7;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.celestial-orb-trigger {
+  width: 120px;
+  height: 120px;
+  margin: 35px auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.core-pulse {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f43f5e 10%, #7c3aed 80%);
+  box-shadow: 0 0 30px rgba(244, 63, 94, 0.8);
+  animation: pulseCore 2.2s infinite ease-in-out;
+}
+
+.core-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+}
+
+.core-ring.r1 {
+  width: 90px;
+  height: 90px;
+  border-color: rgba(168, 85, 247, 0.6);
+  animation: spinRing 5s linear infinite;
+}
+
+.core-ring.r2 {
+  width: 115px;
+  height: 115px;
+  border-style: dashed;
+  border-color: rgba(254, 240, 138, 0.4);
+  animation: spinRing 8s linear infinite reverse;
+}
+
+.core-emoji {
+  position: relative;
+  z-index: 2;
+  font-size: 1.8rem;
+}
+
+@keyframes pulseCore {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.25); filter: brightness(1.4); }
+}
+
+@keyframes spinRing {
+  100% { transform: rotate(360deg); }
+}
+
+/* Orbiting Fragments */
+.star-nodes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.fragment-btn {
+  background: rgba(18, 25, 52, 0.7);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 16px 20px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fragment-btn:hover {
+  transform: translateX(6px);
+  border-color: var(--amethyst);
+  background: rgba(30, 42, 85, 0.85);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3);
+}
+
+.node-icon {
+  font-size: 1.5rem;
+}
+
+.node-info strong {
+  display: block;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.node-info small {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.finish-vault-btn {
+  width: 100%;
+}
+
+/* Lightbox Modal */
+.cosmos-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 7, 18, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cosmos-lightbox.active {
+  display: flex;
+}
+
+.lightbox-pane {
+  max-height: 88vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.dismiss-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.frag-tag {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: #c084fc;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.date-glow {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gold-glow);
+  margin-bottom: 12px;
+}
+
+/* Fragment 3: Scratch Cards */
+.reveal-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.stardust-reveal-card {
+  position: relative;
+  background: rgba(22, 30, 62, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  overflow: hidden;
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.stardust-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2e1065, #1e1b4b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: #e9d5ff;
+  font-weight: 500;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 2;
+}
+
+.stardust-reveal-card.revealed .stardust-cover {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+.stardust-secret {
+  color: #fff;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  padding: 5px;
+  z-index: 1;
+}
+
+/* Fragment 4: First Text Screenshot Showcase */
+.first-text-showcase {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.screenshot-wrapper {
+  max-width: 320px;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.screenshot-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.first-text-caption {
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-pure);
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Fragment 5: Hologram Player */
+.hologram-player {
+  background: rgba(8, 14, 32, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 25px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vinyl-disc {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #475569 20%, #090d16 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--amethyst);
+  margin-bottom: 12px;
+}
+
+.vinyl-disc.spinning {
+  animation: spin 3.5s linear infinite;
+}
+
+.track-title {
+  font-family: var(--font-cinzel);
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.track-artist {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 15px;
+}
+
+.mini-btn {
+  margin-top: 5px;
+  padding: 10px 22px;
+  font-size: 0.88rem;
+}
+
+/* CHAPTER 5: EVASIVE "NO" */
+.question-arena {
+  text-align: center;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.big-question {
+  font-family: var(--font-playfair);
+  font-size: 1.55rem;
+  margin: 15px 0;
+  color: #fff;
+}
+
+.bot-dialogue {
+  min-height: 32px;
+  font-size: 1rem;
+  color: #f43f5e;
+  font-weight: 500;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.choice-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  min-height: 90px;
+}
+
+.yes-choice {
+  background: linear-gradient(135deg, #f43f5e, #8b5cf6);
+  z-index: 2;
+}
+
+.no-choice {
+  background: rgba(51, 65, 85, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text-soft);
+  touch-action: none;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* REWARD POPUPS (KISS & HUG) */
+.reward-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 7, 18, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.reward-overlay.active {
+  display: flex;
+}
+
+.reward-card {
+  text-align: center;
+  max-width: 440px;
+}
+
+.reward-sparkle {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.interactive-kiss-mark {
+  font-size: 4rem;
+  margin: 20px auto;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.6));
+}
+
+.interactive-kiss-mark:active {
+  transform: scale(1.4);
+}
+
+.warm-hug-embrace {
+  width: 110px;
+  height: 110px;
+  margin: 20px auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.hug-emoji {
+  font-size: 3.8rem;
+  position: relative;
+  z-index: 2;
+}
+
+.warmth-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.4), transparent);
+  animation: pulseWarmth 2s infinite ease-out;
+}
+
+@keyframes pulseWarmth {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* CHAPTER 6: SACRED LETTER */
+.sacred-letter-scroll {
+  max-width: 680px;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.date-hero {
+  color: var(--gold-glow);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+}
+
+.deep-letter-text {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: #f1f5f9;
+}
+
+.deep-letter-text p {
+  margin-bottom: 18px;
+}
+
+.accent-paragraph {
+  background: rgba(168, 85, 247, 0.12);
+  border-left: 3px solid var(--ethiopian-yellow);
+  padding: 14px 18px;
+  border-radius: 0 14px 14px 0;
+}
+
+.sign-block {
+  margin-top: 30px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.signature-tag {
+  display: block;
+  font-size: 0.92rem;
+  color: #c084fc;
+  margin-top: 8px;
+}
+
+/* CHAPTER 7: WISHING FINALE */
+.wishing-galaxy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin: 35px 0;
+}
+
+.celestial-star {
+  font-size: 2.2rem;
+  cursor: pointer;
+  color: var(--gold-glow);
+  transition: all 0.3s ease;
+}
+
+.celestial-star:hover {
+  transform: scale(1.4);
+  text-shadow: 0 0 20px var(--gold-glow);
+}
+
+.celestial-star.shot {
+  animation: shootAcross 1.1s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes shootAcross {
+  0% { transform: scale(1.3) translate(0, 0); opacity: 1; }
+  100% { transform: scale(0.2) translate(350px, -500px); opacity: 0; }
+}
+
+.blessing-reveal {
+  margin-top: 25px;
+}
+
+.luminous-line {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-soft);
+  margin-bottom: 14px;
+}
+
+.cosmic-infinity {
+  font-size: 1.25rem;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  margin-top: 15px;
+}
+
+.text-center { text-align: center; }
+.hidden { display: none !important; }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .header-bar {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+  .sky-locator {
+    display: none; /* Keep clean on small mobile */
+  }
+  .stargaze-toggle-btn {
+    font-size: 0.72rem;
+    padding: 7px 12px;
+  }
+  .audio-widget {
+    padding: 7px 12px;
+  }
+  .nebula-glass-card {
+    padding: 30px 20px;
+    border-radius: 22px;
+  }
+  .cinzel-title {
+    font-size: 1.55rem;
+  }
+  .cinzel-title span {
+    font-size: 1.1rem;
+  }
+  .letter-verse, .narrative-stream, .deep-letter-text {
+    font-size: 0.98rem;
+  }
+  .orb-btn {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+  }
+  .choice-zone {
+    flex-direction: column;
+    min-height: 120px;
+  }
+  .no-choice {
+    position: relative;
+  }
+}
