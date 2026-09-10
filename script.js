@@ -62,19 +62,64 @@ function initEntranceExperience() {
         setTimeout(() => toast.classList.remove("active"), 5000);
       }
     }, 600);
-  }, 2800);
+  }, 4000);
 }
 
 /* =========================================================================
    COPY SKY LINK TO CLIPBOARD
    ========================================================================= */
+/* =========================================================================
+   ROBUST SAVE / SHARE SKY FEATURE
+   ========================================================================= */
 function copySkyLink() {
+  const shareData = {
+    title: "A Celestial Realm For Unique 🌌",
+    text: "Addis Ababa Night Sky • September 11 • For Unique 🤍",
+    url: window.location.href
+  };
+
+  // 1. Try native mobile share/save sheet (iOS / Android)
+  if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+    navigator.share(shareData).catch((err) => {
+      // User cancelled share, fallback to copy
+      fallbackClipboardCopy();
+    });
+  } else {
+    // 2. Fallback to direct clipboard copy
+    fallbackClipboardCopy();
+  }
+}
+
+function fallbackClipboardCopy() {
   const url = window.location.href;
-  navigator.clipboard.writeText(url).then(() => {
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url)
+      .then(() => showActionToast("Saved to your orbit. Happy Birthday, Unique! 🤍"))
+      .catch(() => execCommandFallback(url));
+  } else {
+    execCommandFallback(url);
+  }
+}
+
+// Failsafe copy method for older mobile WebViews
+function execCommandFallback(text) {
+  const tempInput = document.createElement("textarea");
+  tempInput.value = text;
+  tempInput.style.position = "fixed";
+  tempInput.style.opacity = "0";
+  document.body.appendChild(tempInput);
+  tempInput.focus();
+  tempInput.select();
+
+  try {
+    document.execCommand("copy");
     showActionToast("Saved to your orbit. Happy Birthday, Unique! 🤍");
-  }).catch(() => {
-    showActionToast("Website link ready to save! 🌌");
-  });
+  } catch (e) {
+    showActionToast("Link: " + window.location.href);
+  }
+
+  document.body.removeChild(tempInput);
 }
 
 function showActionToast(message) {
@@ -84,7 +129,7 @@ function showActionToast(message) {
 
   msgEl.textContent = message;
   toast.classList.add("active");
-  setTimeout(() => toast.classList.remove("active"), 3200);
+  setTimeout(() => toast.classList.remove("active"), 3500);
 }
 
 /* =========================================================================
