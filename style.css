@@ -1,6 +1,3 @@
-/* =========================================================================
-   COSMIC LUXURY PALETTE & GLASSMORPHISM
-   ========================================================================= */
 :root {
   --space-black: #04060f;
   --nebula-purple: #160c2e;
@@ -36,7 +33,7 @@ body {
   user-select: none;
 }
 
-/* Starfield & Addis Ababa Constellations Canvas */
+/* Starfield Canvas */
 #universeCanvas {
   position: fixed;
   top: 0;
@@ -44,6 +41,15 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: 0;
+  cursor: grab;
+}
+
+body.stargaze-active #universeCanvas {
+  cursor: grab;
+}
+
+body.stargaze-active #universeCanvas:active {
+  cursor: grabbing;
 }
 
 .cosmic-dust-overlay {
@@ -60,7 +66,37 @@ body {
   z-index: 1;
 }
 
-/* HEADER CONTROLS BAR */
+/* Floating Adey Abeba Petals */
+.petals-canvas-holder {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.adey-petal {
+  position: absolute;
+  width: 12px;
+  height: 18px;
+  background: linear-gradient(135deg, #facc15, #fef08a);
+  border-radius: 50% 0 50% 50%;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 5px rgba(250, 204, 21, 0.5));
+  animation: petalDrift 8s linear infinite;
+}
+
+@keyframes petalDrift {
+  0% { transform: translateY(-30px) rotate(0deg) translateX(0); opacity: 0; }
+  15% { opacity: 0.85; }
+  90% { opacity: 0.85; }
+  100% { transform: translateY(105vh) rotate(360deg) translateX(80px); opacity: 0; }
+}
+
+/* Header Controls */
 .header-bar {
   position: fixed;
   top: 20px;
@@ -78,10 +114,32 @@ body {
   pointer-events: auto;
 }
 
+.header-left-actions,
 .header-right-actions {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* Universal Back Navigation Button */
+.nav-back-btn {
+  background: rgba(14, 20, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.nav-back-btn:hover {
+  transform: translateX(-3px);
+  border-color: var(--amethyst);
 }
 
 /* Sky Locator Pill */
@@ -140,15 +198,14 @@ body {
   box-shadow: 0 4px 20px rgba(254, 240, 138, 0.35);
 }
 
-/* Pure Stargazing Mode Exit Hint */
 .stargaze-exit-hint {
   position: fixed;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 999;
-  background: rgba(10, 15, 30, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(10, 15, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 10px 22px;
   border-radius: 30px;
   font-size: 0.85rem;
@@ -157,6 +214,7 @@ body {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.5s ease;
+  white-space: nowrap;
 }
 
 body.stargaze-active .stargaze-exit-hint {
@@ -171,7 +229,6 @@ body.stargaze-active .reward-overlay {
   pointer-events: none !important;
 }
 
-/* Stargazer Note */
 .stargazer-note {
   background: rgba(168, 85, 247, 0.12);
   border: 1px solid rgba(168, 85, 247, 0.25);
@@ -255,7 +312,6 @@ body.stargaze-active .reward-overlay {
   opacity: 1;
 }
 
-/* Glassmorphism Cards */
 .nebula-glass-card {
   background: var(--glass-tint);
   backdrop-filter: blur(20px);
@@ -328,7 +384,6 @@ body.stargaze-active .reward-overlay {
   text-shadow: 0 0 25px rgba(254, 240, 138, 0.4);
 }
 
-/* Cosmic Button */
 .orb-btn {
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.85) 0%, rgba(79, 70, 229, 0.85) 100%);
   color: #fff;
@@ -359,7 +414,6 @@ body.stargaze-active .reward-overlay {
   100% { box-shadow: 0 0 35px rgba(244, 63, 94, 0.7); }
 }
 
-/* Ethiopian Accents */
 .subtle-ethiopian-star {
   font-size: 0.9rem;
   letter-spacing: 2px;
@@ -421,7 +475,80 @@ body.stargaze-active .reward-overlay {
   50% { transform: scale(1.3); filter: drop-shadow(0 0 15px var(--amethyst)); }
 }
 
-/* Dossier (Chapter 3) */
+/* Touch Heartbeat Component (Chapter 2) */
+.heartbeat-arena {
+  margin: 25px auto 10px auto;
+  text-align: center;
+  position: relative;
+}
+
+.heartbeat-sensor {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.6) 20%, rgba(124, 58, 237, 0.4) 80%);
+  margin: 0 auto 12px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  touch-action: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.4);
+  transition: transform 0.2s;
+}
+
+.heartbeat-sensor:active, .heartbeat-sensor.holding {
+  transform: scale(1.15);
+  box-shadow: 0 0 35px rgba(244, 63, 94, 0.8);
+}
+
+.hb-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  pointer-events: none;
+}
+
+.hb-ring.ring-1 {
+  width: 100px;
+  height: 100px;
+  animation: hbPulse 2s infinite ease-out;
+}
+
+.hb-ring.ring-2 {
+  width: 120px;
+  height: 120px;
+  animation: hbPulse 2s infinite ease-out 0.6s;
+}
+
+@keyframes hbPulse {
+  0% { transform: scale(0.7); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.hb-icon {
+  font-size: 2rem;
+  z-index: 2;
+}
+
+.hb-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.hb-secret {
+  margin-top: 12px;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 500;
+  text-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Chapter 3 */
 .dossier-frame {
   border: 1px solid rgba(168, 85, 247, 0.35);
   background: rgba(14, 18, 38, 0.78);
@@ -453,6 +580,39 @@ body.stargaze-active .reward-overlay {
   margin: 10px 0;
 }
 
+.time-elapsed-capsule {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 18px;
+  padding: 16px;
+  margin: 18px 0;
+  text-align: center;
+}
+
+.elapsed-tag {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  color: #c084fc;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.elapsed-timer {
+  font-family: var(--font-cinzel);
+  font-size: 1.15rem;
+  color: var(--gold-glow);
+  font-weight: 600;
+  text-shadow: 0 0 12px rgba(254, 240, 138, 0.4);
+}
+
+.elapsed-footnote {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  margin-top: 6px;
+  font-style: italic;
+}
+
 .classified-capsule {
   background: rgba(8, 12, 28, 0.8);
   border: 1px dashed rgba(168, 85, 247, 0.5);
@@ -474,15 +634,28 @@ body.stargaze-active .reward-overlay {
   margin-bottom: 8px;
 }
 
-.capsule-revealed {
-  font-size: 1rem;
-  line-height: 1.7;
+.proof-image-wrapper {
+  max-width: 320px;
+  width: 100%;
+  margin: 10px auto 16px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.proof-image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .confession-quote {
   font-style: italic;
   color: #f1f5f9;
   margin-bottom: 10px;
+  font-size: 0.98rem;
+  line-height: 1.6;
 }
 
 .confession-comment {
@@ -490,7 +663,7 @@ body.stargaze-active .reward-overlay {
   font-weight: 500;
 }
 
-/* CHAPTER 4: VAULT & RELIC */
+/* Chapter 4 */
 .vault-container {
   width: 100%;
   max-width: 620px;
@@ -562,7 +735,6 @@ body.stargaze-active .reward-overlay {
   100% { transform: rotate(360deg); }
 }
 
-/* Orbiting Fragments */
 .star-nodes-grid {
   display: flex;
   flex-direction: column;
@@ -648,14 +820,6 @@ body.stargaze-active .reward-overlay {
   cursor: pointer;
 }
 
-.frag-tag {
-  font-size: 0.75rem;
-  letter-spacing: 2px;
-  color: #c084fc;
-  display: block;
-  margin-bottom: 8px;
-}
-
 .date-glow {
   font-size: 1.25rem;
   font-weight: 600;
@@ -663,7 +827,6 @@ body.stargaze-active .reward-overlay {
   margin-bottom: 12px;
 }
 
-/* Fragment 3: Scratch Cards */
 .reveal-cards-col {
   display: flex;
   flex-direction: column;
@@ -718,7 +881,6 @@ body.stargaze-active .reward-overlay {
   z-index: 1;
 }
 
-/* Fragment 4: First Text Screenshot Showcase */
 .first-text-showcase {
   margin-top: 20px;
   display: flex;
@@ -750,7 +912,6 @@ body.stargaze-active .reward-overlay {
   text-align: center;
 }
 
-/* Fragment 5: Hologram Player */
 .hologram-player {
   background: rgba(8, 14, 32, 0.7);
   border: 1px solid var(--glass-border);
@@ -797,7 +958,7 @@ body.stargaze-active .reward-overlay {
   font-size: 0.88rem;
 }
 
-/* CHAPTER 5: EVASIVE "NO" */
+/* Chapter 5 */
 .question-arena {
   text-align: center;
   min-height: 440px;
@@ -845,7 +1006,7 @@ body.stargaze-active .reward-overlay {
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* REWARD POPUPS (KISS & HUG) */
+/* Reward Overlay */
 .reward-overlay {
   position: fixed;
   top: 0;
@@ -878,50 +1039,35 @@ body.stargaze-active .reward-overlay {
 }
 
 .interactive-kiss-mark {
-  font-size: 4rem;
+  font-size: 4.5rem;
   margin: 20px auto;
   cursor: pointer;
   display: inline-block;
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.6));
+  filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.7));
 }
 
 .interactive-kiss-mark:active {
   transform: scale(1.4);
 }
 
-.warm-hug-embrace {
-  width: 110px;
-  height: 110px;
-  margin: 20px auto;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.screen-kiss-stamp {
+  position: fixed;
+  font-size: 3rem;
+  pointer-events: none;
+  z-index: 9999;
+  animation: kissPop 1.8s forwards cubic-bezier(0.12, 0.8, 0.3, 1);
+  filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.8));
 }
 
-.hug-emoji {
-  font-size: 3.8rem;
-  position: relative;
-  z-index: 2;
+@keyframes kissPop {
+  0% { transform: scale(0.2) rotate(0deg); opacity: 0; }
+  25% { transform: scale(1.3) rotate(var(--rot, 0deg)); opacity: 1; }
+  80% { opacity: 0.9; }
+  100% { transform: scale(1.1) rotate(var(--rot, 0deg)) translateY(-40px); opacity: 0; }
 }
 
-.warmth-ring {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(244, 63, 94, 0.4), transparent);
-  animation: pulseWarmth 2s infinite ease-out;
-}
-
-@keyframes pulseWarmth {
-  0% { transform: scale(0.8); opacity: 0.8; }
-  100% { transform: scale(1.5); opacity: 0; }
-}
-
-/* CHAPTER 6: SACRED LETTER */
+/* Chapter 6 */
 .sacred-letter-scroll {
   max-width: 680px;
   max-height: 85vh;
@@ -966,13 +1112,90 @@ body.stargaze-active .reward-overlay {
   margin-top: 8px;
 }
 
-/* CHAPTER 7: WISHING FINALE */
+/* Chapter Voice (6.5) */
+.voice-revelation-card {
+  max-width: 540px;
+}
+
+.voice-card-standout {
+  background: rgba(18, 25, 52, 0.8);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  border-radius: 24px;
+  padding: 30px 20px;
+  margin: 25px auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(244, 63, 94, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.voice-waveform {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  margin-bottom: 14px;
+}
+
+.voice-waveform span {
+  width: 4px;
+  height: 8px;
+  background: var(--kiss-pink);
+  border-radius: 2px;
+  transition: height 0.2s;
+}
+
+.voice-card-standout.playing .voice-waveform span:nth-child(odd) { animation: voiceBeat 0.7s infinite alternate; }
+.voice-card-standout.playing .voice-waveform span:nth-child(even) { animation: voiceBeat 0.9s infinite alternate 0.3s; }
+
+@keyframes voiceBeat {
+  0% { height: 6px; }
+  100% { height: 26px; }
+}
+
+.voice-timer {
+  font-size: 0.9rem;
+  color: var(--gold-glow);
+  margin: 8px 0 16px 0;
+  font-family: var(--font-cinzel);
+}
+
+/* Chapter 7 */
+.wish-input-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 20px auto 25px auto;
+  max-width: 420px;
+  width: 100%;
+}
+
+.wish-input-box input {
+  width: 100%;
+  background: rgba(18, 25, 52, 0.75);
+  border: 1px solid var(--glass-border);
+  padding: 14px 20px;
+  border-radius: 30px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.wish-input-box input:focus {
+  border-color: var(--gold-glow);
+  box-shadow: 0 0 20px rgba(254, 240, 138, 0.3);
+}
+
 .wishing-galaxy {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 30px;
-  margin: 35px 0;
+  margin: 25px 0 35px 0;
 }
 
 .celestial-star {
@@ -1017,7 +1240,6 @@ body.stargaze-active .reward-overlay {
 .text-center { text-align: center; }
 .hidden { display: none !important; }
 
-/* Responsive adjustments */
 @media (max-width: 600px) {
   .header-bar {
     top: 12px;
@@ -1025,7 +1247,11 @@ body.stargaze-active .reward-overlay {
     right: 12px;
   }
   .sky-locator {
-    display: none; /* Keep clean on small mobile */
+    display: none;
+  }
+  .nav-back-btn {
+    font-size: 0.74rem;
+    padding: 6px 12px;
   }
   .stargaze-toggle-btn {
     font-size: 0.72rem;

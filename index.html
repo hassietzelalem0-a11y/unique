@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>A Celestial Realm For Unique 🌌</title>
   
-  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -17,26 +16,32 @@
   <!-- Sky Canvas: Addis Ababa Celestial Simulation -->
   <canvas id="universeCanvas"></canvas>
   <div class="cosmic-dust-overlay"></div>
+  <div class="petals-canvas-holder" id="petalsHolder"></div>
 
   <!-- Pure Sky Mode Return Hint -->
   <div class="stargaze-exit-hint" id="stargazeExitHint">
-    <span>✦ Tap anywhere on the sky to return ✦</span>
+    <span>✦ Pinch/Scroll to Zoom • Double Tap Anywhere to Return ✦</span>
   </div>
 
-  <!-- Header Controls: Sky Locator + Stargaze Alone Mode + Music -->
+  <!-- Header Controls -->
   <div class="header-bar" id="headerBar">
-    <div class="sky-locator" title="Night sky above Addis Ababa, Ethiopia">
-      <div class="radar-dot"></div>
-      <span>📍 Addis Ababa Sky • 9°01'N • Sep 10</span>
+    <div class="header-left-actions">
+      <!-- Universal Back Navigation Button -->
+      <button class="nav-back-btn hidden" id="universalBackBtn" onclick="goBackChapter()" title="Return to previous page">
+        <span>← Back</span>
+      </button>
+
+      <div class="sky-locator" title="Night sky above Addis Ababa, Ethiopia">
+        <div class="radar-dot"></div>
+        <span>📍 Addis Ababa Sky • 9°01'N • Sep 11</span>
+      </div>
     </div>
 
     <div class="header-right-actions">
-      <!-- Stargaze Mode Toggle Button -->
       <button class="stargaze-toggle-btn" id="stargazeBtn" onclick="toggleStargazeMode()" title="Look at the sky alone">
         <span>✨ Just Look at the Sky</span>
       </button>
 
-      <!-- Music Player Toggle -->
       <div class="audio-widget" id="musicWidget" title="Play Sure Thing">
         <div class="audio-waves">
           <span></span><span></span><span></span><span></span>
@@ -46,16 +51,22 @@
     </div>
   </div>
 
-  <!-- Audio Element pre-linked directly to audio/song.mp3 -->
+  <!-- Background Music: song.mp3 -->
   <audio id="cosmicAudio" loop preload="auto">
     <source src="audio/song.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Dedicated Voice Note: voicenote.m4a -->
+  <audio id="voiceNoteAudio" preload="auto">
+    <source src="audio/voicenote.m4a" type="audio/mp3" />
+    <source src="audio/voicenote.mp3" type="audio/mpeg" />
   </audio>
 
   <!-- CHAPTER 1: THE THRESHOLD -->
   <section class="chapter active" id="chapter-1">
     <div class="nebula-glass-card fade-up">
-      <div class="subtle-ethiopian-star">🌼 ✦ መስከረም ✦ 🌼</div>
-      <p class="celestial-tag">Addis Ababa Night Sky • september 11</p>
+      <div class="subtle-ethiopian-star">🌼 ✦ መስከረም 1 • እንቁጣጣሽ ✦ 🌼</div>
+      <p class="celestial-tag">Addis Ababa Night Sky • September 11</p>
       <h1 class="cinzel-title">I know how much you love looking at the stars…<br><span>so I brought tonight's sky right to your screen.</span></h1>
       
       <div class="stargazer-note">
@@ -70,7 +81,7 @@
     </div>
   </section>
 
-  <!-- CHAPTER 2: FOR SOMEONE UNIQUE -->
+  <!-- CHAPTER 2: FOR SOMEONE UNIQUE + HEARTBEAT HOLD -->
   <section class="chapter" id="chapter-2">
     <div class="nebula-glass-card">
       <div class="floating-constellation">
@@ -87,50 +98,69 @@
         <p>It’s not just some random nickname.</p>
         <p>It’s because out of all the noise in this world, there is something about the way you speak, joke, and think that feels entirely like <em>you</em>.</p>
         <p class="luminous-text">And somehow, under this massive sky full of people,<br>I'm really glad I happened to meet you. 🤍</p>
-        <p class="whisper-hint">And it all started with a very specific, calculated move…</p>
       </div>
-      <button class="orb-btn" onclick="goToChapter(3)">Declassify the origin → ✨</button>
+
+      <div class="heartbeat-arena">
+        <div class="heartbeat-sensor" id="heartbeatBtn">
+          <div class="hb-ring ring-1"></div>
+          <div class="hb-ring ring-2"></div>
+          <span class="hb-icon">🤍</span>
+        </div>
+        <p class="hb-label" id="hbLabel">Hold thumb here for 3 seconds</p>
+        <div class="hb-secret hidden" id="hbSecret">
+          Just making sure you're paying attention. 🤍
+        </div>
+      </div>
+
+      <button class="orb-btn" id="hbProceedBtn" onclick="goToChapter(3)">Declassify the origin → ✨</button>
     </div>
   </section>
 
-  <!-- CHAPTER 3: THE MARVEL MISSION (TIKTOK TO INSTAGRAM) -->
+  <!-- CHAPTER 3: THE MARVEL OPERATION + PROOF -->
   <section class="chapter" id="chapter-3">
     <div class="nebula-glass-card dossier-frame">
       <div class="dossier-header">
-        <span class="stamp">INTERCEPTED FREQUENCY</span>
-        <span class="dossier-code">LOG // 08-AUG</span>
+        <span class="stamp">MARVEL OPERATION</span>
+        <span class="dossier-code">RECORD // 08-AUG</span>
       </div>
 
-      <h2 class="cinzel-title">The Marvel Operation 🦸‍♀️✨</h2>
+      <h2 class="cinzel-title">The Master Strategy 🦸‍♀️✨</h2>
 
       <div class="narrative-stream">
         <p class="story-line">I had posted something about Marvel on TikTok. It was just floating out there on the internet…</p>
-        <p class="story-line highlight">Until <strong>august 9</strong>.</p>
+        <p class="story-line highlight">Until <strong>August 8</strong>.</p>
         <p class="story-line">That was the day you crossed over to my <strong>Instagram</strong> to reply to it.</p>
+      </div>
+
+      <div class="time-elapsed-capsule">
+        <span class="elapsed-tag">TIME SINCE THAT FIRST REPLY</span>
+        <div class="elapsed-timer" id="liveElapsedCounter">Calculating orbital time…</div>
+        <small class="elapsed-footnote">And honestly? Every single day has been sweeter. 🤍</small>
       </div>
 
       <div class="classified-capsule" id="classifiedCapsule" onclick="unlockDossier()">
         <div class="capsule-front" id="capsuleFront">
           <span class="lock-icon">🔒</span>
-          <p><strong>REVEAL CLASSIFIED INTEL</strong></p>
-          <small>(Tap to decrypt Unique's secret strategy)</small>
+          <p><strong>REVEAL THE EVIDENCE</strong></p>
+          <small>(Tap to view the confession)</small>
         </div>
         <div class="capsule-revealed hidden" id="capsuleBack">
-          <p class="confession-quote">"You later told me that seeing that TikTok and replying to me on Instagram was actually your master technique to start talking to me."</p>
-          <p class="confession-comment">And honestly? It worked effortlessly. 😭✨</p>
+          <div class="proof-image-wrapper">
+            <img src="images/prove.jpg" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=700&q=80'" alt="The Proof" id="proveImg" />
+          </div>
+          <p class="confession-quote">"If u want something go through what they love... it's a method Thanos used to get the universe stone. So be it."</p>
+          <p class="confession-comment">Thanos-level planning just to get into my DMs… and it worked effortlessly. 😭✨</p>
         </div>
       </div>
 
-      <p class="whisper-hint">Who knew a TikTok post would be responsible for all of this?</p>
       <button class="orb-btn" onclick="goToChapter(4)">Proceed to the vault → 🌠</button>
     </div>
   </section>
 
-  <!-- CHAPTER 4: THE CELESTIAL RELIC (5 GIFTS) -->
+  <!-- CHAPTER 4: THE CELESTIAL RELIC -->
   <section class="chapter" id="chapter-4">
     <div class="vault-container">
       
-      <!-- Phase A: The Glowing Relic -->
       <div class="nebula-glass-card" id="relicClosed">
         <div class="subtle-badge">CELESTIAL VAULT</div>
         <h2 class="cinzel-title">The Glowing Core</h2>
@@ -145,24 +175,23 @@
         <button class="orb-btn glow-spin" onclick="shatterRelic()">Shatter the core to open ✨</button>
       </div>
 
-      <!-- Phase B: Shattered Orbiting Gifts -->
       <div class="relic-fragments hidden" id="relicOpened">
-        <h3 class="cinzel-title text-center">Five Stars In Your Orbit 💫</h3>
+        <h3 class="cinzel-title text-center">Stars In Your Orbit 💫</h3>
         <p class="whisper-hint text-center">Tap each star to illuminate the thought</p>
 
         <div class="star-nodes-grid">
           <div class="fragment-btn" onclick="displayFragment(1)">
             <span class="node-icon">🌌</span>
             <div class="node-info">
-              <strong>I. The Beginning</strong>
-              <small>august 9, 2026</small>
+              <strong>The Beginning</strong>
+              <small>August 8, 2026</small>
             </div>
           </div>
           
           <div class="fragment-btn" onclick="displayFragment(2)">
             <span class="node-icon">🤍</span>
             <div class="node-info">
-              <strong>II. Why Unique</strong>
+              <strong>Why Unique</strong>
               <small>My favorite title for you</small>
             </div>
           </div>
@@ -170,7 +199,7 @@
           <div class="fragment-btn" onclick="displayFragment(3)">
             <span class="node-icon">✨</span>
             <div class="node-info">
-              <strong>III. Things I Like</strong>
+              <strong>Things I Like</strong>
               <small>Scratch the stardust to reveal</small>
             </div>
           </div>
@@ -178,7 +207,7 @@
           <div class="fragment-btn" onclick="displayFragment(4)">
             <span class="node-icon">💬</span>
             <div class="node-info">
-              <strong>IV. Our First Text</strong>
+              <strong>Where It Began</strong>
               <small>The moment that started it all</small>
             </div>
           </div>
@@ -186,7 +215,7 @@
           <div class="fragment-btn" onclick="displayFragment(5)">
             <span class="node-icon">🎵</span>
             <div class="node-info">
-              <strong>V. A Song For You</strong>
+              <strong>A Song For You</strong>
               <small>Sure Thing - Miguel</small>
             </div>
           </div>
@@ -203,11 +232,10 @@
     <div class="lightbox-pane nebula-glass-card" onclick="event.stopPropagation()">
       <button class="dismiss-btn" onclick="closeLightbox()">✕</button>
 
-      <!-- Frag 1 -->
+      <!-- 1 -->
       <div class="frag-content hidden" id="frag-1">
-        <span class="frag-tag">FRAGMENT 01</span>
         <h3 class="cinzel-title">⭐ The Beginning</h3>
-        <div class="date-glow">august 9, 2026</div>
+        <div class="date-glow">August 8, 2026</div>
         <div class="letter-verse">
           <p>The day you went from someone I didn't know…</p>
           <p>to someone I actually look forward to talking to.</p>
@@ -215,9 +243,8 @@
         </div>
       </div>
 
-      <!-- Frag 2 -->
+      <!-- 2 -->
       <div class="frag-content hidden" id="frag-2">
-        <span class="frag-tag">FRAGMENT 02</span>
         <h3 class="cinzel-title">⭐ Why I Call You Unique</h3>
         <div class="letter-verse">
           <p>Because you are.</p>
@@ -228,19 +255,15 @@
         </div>
       </div>
 
-      <!-- Frag 3: Scratch Cards -->
+      <!-- 3: Scratch Cards -->
       <div class="frag-content hidden" id="frag-3">
-        <span class="frag-tag">FRAGMENT 03</span>
         <h3 class="cinzel-title">⭐ Things I Like About You</h3>
         <p class="whisper-hint">Tap each card to reveal the thought beneath</p>
-        <div class="reveal-cards-col" id="revealCardsHolder">
-          <!-- Populated by JS -->
-        </div>
+        <div class="reveal-cards-col" id="revealCardsHolder"></div>
       </div>
 
-      <!-- Frag 4: The Sacred First Text Screenshot -->
+      <!-- 4: First Text Screenshot -->
       <div class="frag-content hidden" id="frag-4">
-        <span class="frag-tag">FRAGMENT 04</span>
         <h3 class="cinzel-title">⭐ Where It All Began</h3>
         <p class="whisper-hint">That first Instagram DM reply</p>
         <div class="first-text-showcase">
@@ -251,9 +274,8 @@
         </div>
       </div>
 
-      <!-- Frag 5: Song Player -->
+      <!-- 5: Song Player -->
       <div class="frag-content hidden" id="frag-5">
-        <span class="frag-tag">FRAGMENT 05</span>
         <h3 class="cinzel-title">⭐ A Song For You</h3>
         <div class="letter-verse text-center">
           <p>Press play.</p>
@@ -286,32 +308,17 @@
     </div>
   </section>
 
-  <!-- REWARD POPUP 1: DIGITAL KISS -->
+  <!-- DIGITAL KISS POPUP -->
   <div class="reward-overlay" id="kissOverlay">
     <div class="reward-card nebula-glass-card bounce-in">
       <span class="reward-sparkle">✨💋✨</span>
-      <h3 class="cinzel-title">A Digital Kiss For You coz i am not really around you</h3>
+      <h3 class="cinzel-title">A Digital Kiss For You</h3>
       <p class="letter-verse">Because you gave the only correct answer. 😌</p>
-      <div class="interactive-kiss-mark" onclick="plantKiss()">
+      <div class="interactive-kiss-mark" onclick="plantFullscreenKisses()">
         💋
       </div>
-      <small class="whisper-hint">(Tap the kiss to collect it!)</small>
-      <button class="orb-btn mini-btn" onclick="openHugReward()">And there's one more thing… → 🤗</button>
-    </div>
-  </div>
-
-  <!-- REWARD POPUP 2: DIGITAL HUG -->
-  <div class="reward-overlay" id="hugOverlay">
-    <div class="reward-card nebula-glass-card bounce-in">
-      <span class="reward-sparkle">✨🫂✨</span>
-      <h3 class="cinzel-title">i wish i was beside you and give you a really warm hug but i am not so i give you a Digital Hug</h3>
-      <p class="letter-verse">Wrapped in starlight, just for you today.</p>
-      <div class="warm-hug-embrace" onclick="triggerWarmth()">
-        <span class="hug-emoji">🫂</span>
-        <div class="warmth-ring"></div>
-      </div>
-      <small class="whisper-hint">(Tap to feel the warmth!)</small>
-      <button class="orb-btn glow-spin" onclick="finishRewardsAndOpenLetter()">Open your birthday letter → 📜✨</button>
+      <small class="whisper-hint">(Tap the kiss to receive it!)</small>
+      <button class="orb-btn glow-spin mini-btn" id="kissProceedBtn" onclick="finishKissAndOpenLetter()">Open your birthday letter → 📜✨</button>
     </div>
   </div>
 
@@ -325,7 +332,7 @@
       </div>
 
       <h1 class="cinzel-title gold-title">HAPPY BIRTHDAY, UNIQUE 🎂✨</h1>
-      <p class="date-hero">september 11 • Right on the our New Year</p>
+      <p class="date-hero">September 11 • On Enkutatash (መስከረም 1)</p>
 
       <div class="deep-letter-text">
         <p>Hey you,</p>
@@ -333,10 +340,10 @@
         <p>I wanted to make you something a little different this year because a simple "happy birthday" didn't really feel like enough.</p>
         <p>You've only been in my life for a little while, but somehow you've already become someone I genuinely care about, appreciate, and look forward to talking to.</p>
         <p>You're kind, you're sweet, you're funny, and you're just… you. And I hope you never lose that.</p>
-        <p class="accent-paragraph">And what makes this birthday even more special is that it falls on <strong>september 11</strong>—right as a brand new year arrives for us. A new age, a new chapter, fresh sunshine, and blooming Adey Abeba. 🌼✨</p>
+        <p class="accent-paragraph">And what makes this day extraordinarily special is that it falls on <strong>September 11</strong>—right on Enkutatash itself! A brand new year for all of us, and a brand new chapter of life for you, wrapped in fresh sunshine and blooming Adey Abeba. 🌼✨</p>
         <p>As you step into another year of your life, I hope it brings you everything you've been hoping for and so many beautiful surprises you haven't even imagined yet.</p>
         <p>I hope you have more reasons to smile, more memories worth keeping, more peace, and people around you who make you feel as appreciated as you truly deserve to be.</p>
-        <p>And I'm really happy that somehow, out of all the people in this world, august 9 brought you from my TikTok onto my Instagram.</p>
+        <p>And I'm really happy that somehow, out of all the people in this world, August 8 brought you from my TikTok onto my Instagram.</p>
         <p>I don't know exactly where every road leads, but I'm really happy about the little road we're on right now.</p>
         <p>So here's to your new year, and all the beautiful things waiting for you. 🌌</p>
         
@@ -346,7 +353,29 @@
         </p>
       </div>
 
-      <button class="orb-btn" onclick="goToChapter(7)">Make a wish upon a star → 🌠</button>
+      <button class="orb-btn glow-spin" onclick="goToChapter('voice')">Wait, there is one last thing… → 🎙️</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER VOICE: SURPRISE VOICE NOTE -->
+  <section class="chapter" id="chapter-voice">
+    <div class="nebula-glass-card text-center voice-revelation-card">
+      <span class="celestial-tag">FOR UNIQUE</span>
+      <h2 class="cinzel-title">Just In Case Letters Aren't Enough… 🤍</h2>
+      <p class="letter-verse">You thought that was the end, didn't you?</p>
+      <p class="whisper-hint">Some things are meant to be heard, not just read.</p>
+
+      <div class="voice-card-standout">
+        <div class="voice-waveform" id="standaloneVoiceWave">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="voice-timer" id="voiceProgress">Tap to listen to Hassiet</div>
+        <button class="orb-btn mini-btn glow-spin" id="standaloneVoiceBtn" onclick="toggleDedicatedVoiceNote()">
+          ▶ Play Voice Note
+        </button>
+      </div>
+
+      <button class="orb-btn hidden" id="proceedToWishBtn" onclick="goToChapter(7)">Now, make your wish upon a star → 🌠</button>
     </div>
   </section>
 
@@ -354,7 +383,12 @@
   <section class="chapter" id="chapter-7">
     <div class="nebula-glass-card text-center finale-card">
       <h2 class="cinzel-title">Make a wish. ⭐</h2>
-      <p class="letter-verse">It's your birthday, Unique.<br>Close your eyes, pick a star in the Addis Ababa sky, and make your wish.</p>
+      <p class="letter-verse">It's your birthday, Unique.<br>Type your wish into the starlight, or touch a star in the Addis Ababa sky.</p>
+
+      <div class="wish-input-box" id="wishInputContainer">
+        <input type="text" id="userWishInput" placeholder="Type your secret wish here…" maxlength="120" />
+        <button class="orb-btn mini-btn glow-spin" onclick="launchCustomWish()">Launch Wish ⭐</button>
+      </div>
 
       <div class="wishing-galaxy" id="wishingSky">
         <div class="celestial-star" onclick="launchShootingStar(this, event)">✦</div>
@@ -365,10 +399,10 @@
       </div>
 
       <div class="blessing-reveal hidden" id="blessingSection">
-        <p class="luminous-line">I hope at least one of your wishes comes true.</p>
+        <p class="luminous-line" id="wishAcknowledgment">I hope at least one of your wishes comes true.</p>
         <p class="luminous-line">And maybe… I'll get to be part of some of your favorite memories this year. 🤍</p>
         <h3 class="cinzel-title gold-title">Happy Birthday, Unique. 🌌✨</h3>
-        <p class="cosmic-infinity">august 9 → september 11 → ∞</p>
+        <p class="cosmic-infinity">August 8 → September 11 → ∞</p>
       </div>
     </div>
   </section>

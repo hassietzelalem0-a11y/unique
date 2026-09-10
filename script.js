@@ -4,16 +4,10 @@
 const COSMIC_CONFIG = {
   nickname: "Unique",
   authorName: "Hassiet",
-  originDate: "august 9, 2026",
-  birthdayDate: "september 11",
+  originDate: "August 8, 2026 12:00:00",
+  birthdayDate: "September 11",
   locationName: "Addis Ababa, Ethiopia",
 
-  // Audio track configured for "Sure Thing - Miguel" in audio/song.mp3
-  audioTitle: "Sure Thing",
-  audioArtist: "Miguel",
-  audioSrc: "audio/song.mp3",
-
-  // Fragment 03: Things I like about you
   reasons: [
     { label: "Your kindness ✦", secret: "You have an unusually genuine, humble heart." },
     { label: "Your sweetness ✦", secret: "Sometimes you make it practically impossible not to smile. 😭" },
@@ -22,15 +16,17 @@ const COSMIC_CONFIG = {
     { label: "And… 👀 ✦", secret: "I just genuinely really love having you in my everyday life." }
   ],
 
-  // 5 Funny Progressive dialogue lines for the evasive "NO" button
   evasiveBanter: [
     "Round 1: Unique, nice try... but that button is strictly for decoration 😭",
     "Round 2: You really thought I’d let you click that after building a whole galaxy? 👀",
     "Round 3: Button trajectory recalculating... good luck catching it on mobile! 😂",
-    "Round 4: Even Doctor Strange couldn't find a universe where you click NO 🦸‍♂️",
+    "Round 4: Even Thanos couldn't snap away your only real choice 🦸‍♂️",
     "Final Round: Look at that, the button ran away entirely. Only one choice left 😌🤍"
   ]
 };
+
+/* Chapter History Stack for Back Navigation */
+let navigationHistory = [1];
 
 /* =========================================================================
    INITIALIZATION
@@ -40,59 +36,337 @@ document.addEventListener("DOMContentLoaded", () => {
   buildReasons();
   initEvasiveNo();
   initAudioPlayer();
-  initStargazeMode();
+  initDedicatedVoiceNotePlayer();
+  initHeartbeatSensor();
+  initTimeElapsedCounter();
+  initAdeyPetals();
+  updateBackButton();
 });
 
 /* =========================================================================
-   PURE STARGAZING MODE (VIEW THE SKY ALONE WITHOUT TEXT)
+   UNIVERSAL CHAPTER NAVIGATION & BACK BUTTON LOGIC
+   ========================================================================= */
+function goToChapter(chapterId) {
+  triggerShootingStar();
+
+  const current = document.querySelector(".chapter.active");
+  const nextTargetId = typeof chapterId === 'number' ? `chapter-${chapterId}` : `chapter-${chapterId}`;
+  const next = document.getElementById(nextTargetId);
+
+  if (current && next) {
+    current.style.opacity = "0";
+    setTimeout(() => {
+      current.classList.remove("active");
+      next.classList.add("active");
+      
+      navigationHistory.push(chapterId);
+      updateBackButton();
+
+      setTimeout(() => {
+        next.style.opacity = "1";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 30);
+    }, 450);
+  }
+}
+
+function goBackChapter() {
+  if (navigationHistory.length <= 1) return;
+
+  navigationHistory.pop();
+  const prevChapterId = navigationHistory[navigationHistory.length - 1];
+
+  const current = document.querySelector(".chapter.active");
+  const prevTargetId = typeof prevChapterId === 'number' ? `chapter-${prevChapterId}` : `chapter-${prevChapterId}`;
+  const prev = document.getElementById(prevTargetId);
+
+  if (current && prev) {
+    current.style.opacity = "0";
+    setTimeout(() => {
+      current.classList.remove("active");
+      prev.classList.add("active");
+      updateBackButton();
+
+      setTimeout(() => {
+        prev.style.opacity = "1";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 30);
+    }, 400);
+  }
+}
+
+function updateBackButton() {
+  const backBtn = document.getElementById("universalBackBtn");
+  if (!backBtn) return;
+  if (navigationHistory.length > 1) {
+    backBtn.classList.remove("hidden");
+  } else {
+    backBtn.classList.add("hidden");
+  }
+}
+
+/* =========================================================================
+   BACKGROUND AUDIO SYSTEM ("Sure Thing" - song.mp3)
+   ========================================================================= */
+let isAudioPlaying = false;
+let audioInstance = null;
+
+function initAudioPlayer() {
+  audioInstance = document.getElementById("cosmicAudio");
+  const widget = document.getElementById("musicWidget");
+  if (widget) {
+    widget.addEventListener("click", toggleAudioPlayback);
+  }
+}
+
+function toggleAudioPlayback() {
+  if (!audioInstance) audioInstance = document.getElementById("cosmicAudio");
+  if (!audioInstance) return;
+
+  const widget = document.getElementById("musicWidget");
+  const vinyl = document.getElementById("vinylCore");
+  const triggerBtn = document.getElementById("playTrigger");
+  const caption = document.getElementById("audioCaption");
+
+  if (!isAudioPlaying) {
+    // Explicitly load if in idle state
+    if (audioInstance.readyState === 0) {
+      audioInstance.load();
+    }
+    
+    audioInstance.play().then(() => {
+      isAudioPlaying = true;
+      if (widget) widget.classList.add("playing");
+      if (caption) caption.textContent = "Sure Thing";
+      if (vinyl) vinyl.classList.add("spinning");
+      if (triggerBtn) triggerBtn.textContent = "Pause Song";
+    }).catch(err => {
+      console.error("Audio playback error:", err);
+      alert("Please ensure audio/song.mp3 exists in your repository.");
+    });
+  } else {
+    audioInstance.pause();
+    isAudioPlaying = false;
+    if (widget) widget.classList.remove("playing");
+    if (caption) caption.textContent = "Play Song";
+    if (vinyl) vinyl.classList.remove("spinning");
+    if (triggerBtn) triggerBtn.textContent = "Play Song";
+  }
+}
+
+/* =========================================================================
+   DEDICATED VOICE NOTE SYSTEM (voicenote.m4a)
+   ========================================================================= */
+let isDedicatedVoicePlaying = false;
+let dedicatedVoice = null;
+
+function initDedicatedVoiceNotePlayer() {
+  dedicatedVoice = document.getElementById("voiceNoteAudio");
+  if (!dedicatedVoice) return;
+
+  dedicatedVoice.addEventListener("timeupdate", () => {
+    const cur = Math.floor(dedicatedVoice.currentTime);
+    const total = Math.floor(dedicatedVoice.duration) || 0;
+    const progressEl = document.getElementById("voiceProgress");
+    if (progressEl) {
+      const min = Math.floor(cur / 60);
+      const sec = (cur % 60).toString().padStart(2, "0");
+      progressEl.textContent = `${min}:${sec} / Playing Hassiet's voice...`;
+    }
+  });
+
+  dedicatedVoice.addEventListener("ended", () => {
+    isDedicatedVoicePlaying = false;
+    const card = document.querySelector(".voice-card-standout");
+    const btn = document.getElementById("standaloneVoiceBtn");
+    const proceed = document.getElementById("proceedToWishBtn");
+
+    if (card) card.classList.remove("playing");
+    if (btn) btn.textContent = "Replay Voice Note";
+    if (proceed) proceed.classList.remove("hidden");
+
+    if (audioInstance && isAudioPlaying) {
+      audioInstance.volume = 1.0;
+    }
+  });
+}
+
+function toggleDedicatedVoiceNote() {
+  if (!dedicatedVoice) dedicatedVoice = document.getElementById("voiceNoteAudio");
+  if (!dedicatedVoice) return;
+
+  const card = document.querySelector(".voice-card-standout");
+  const btn = document.getElementById("standaloneVoiceBtn");
+  const proceed = document.getElementById("proceedToWishBtn");
+
+  if (!isDedicatedVoicePlaying) {
+    if (dedicatedVoice.readyState === 0) {
+      dedicatedVoice.load();
+    }
+
+    if (audioInstance && isAudioPlaying) {
+      audioInstance.volume = 0.2;
+    }
+
+    dedicatedVoice.play().then(() => {
+      isDedicatedVoicePlaying = true;
+      if (card) card.classList.add("playing");
+      if (btn) btn.textContent = "Pause";
+      if (proceed) proceed.classList.remove("hidden");
+    }).catch(err => {
+      console.error("Voice note error:", err);
+      alert("Please ensure audio/voicenote.m4a exists in your repository.");
+    });
+  } else {
+    dedicatedVoice.pause();
+    isDedicatedVoicePlaying = false;
+    if (card) card.classList.remove("playing");
+    if (btn) btn.textContent = "Resume Voice Note";
+
+    if (audioInstance && isAudioPlaying) {
+      audioInstance.volume = 1.0;
+    }
+  }
+}
+
+/* =========================================================================
+   ZOOMABLE & PANNABLE STARGAZE SKY MODE + DOUBLE-TAP RETURN
    ========================================================================= */
 let isStargazing = false;
+let skyScale = 1;
+let skyPanX = 0;
+let skyPanY = 0;
+let isDragging = false;
+let startX, startY;
+let lastTap = 0;
 
 function toggleStargazeMode() {
   isStargazing = !isStargazing;
   if (isStargazing) {
     document.body.classList.add("stargaze-active");
+    skyScale = 1.15;
   } else {
     document.body.classList.remove("stargaze-active");
+    skyScale = 1;
+    skyPanX = 0;
+    skyPanY = 0;
   }
 }
 
-function initStargazeMode() {
-  const canvas = document.getElementById("universeCanvas");
-  // Tapping the canvas while in pure mode returns to the app
-  canvas.addEventListener("pointerdown", () => {
-    if (isStargazing) {
-      toggleStargazeMode();
-    }
-  });
-}
+const canvasEl = document.getElementById("universeCanvas");
+
+canvasEl.addEventListener("wheel", (e) => {
+  if (!isStargazing) return;
+  e.preventDefault();
+  const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+  skyScale = Math.min(Math.max(0.8, skyScale * zoomFactor), 3.5);
+}, { passive: false });
+
+canvasEl.addEventListener("pointerdown", (e) => {
+  if (!isStargazing) return;
+  
+  const now = new Date().getTime();
+  const timesince = now - lastTap;
+  if (timesince < 300 && timesince > 0) {
+    toggleStargazeMode();
+    return;
+  }
+  lastTap = now;
+
+  isDragging = true;
+  startX = e.clientX - skyPanX;
+  startY = e.clientY - skyPanY;
+});
+
+window.addEventListener("pointermove", (e) => {
+  if (!isStargazing || !isDragging) return;
+  skyPanX = e.clientX - startX;
+  skyPanY = e.clientY - startY;
+});
+
+window.addEventListener("pointerup", () => {
+  isDragging = false;
+});
 
 /* =========================================================================
-   CHAPTER NAVIGATION
+   TOUCH HEARTBEAT HOLD (CHAPTER 2)
    ========================================================================= */
-function goToChapter(chapterNum) {
-  triggerShootingStar();
+function initHeartbeatSensor() {
+  const sensor = document.getElementById("heartbeatBtn");
+  const label = document.getElementById("hbLabel");
+  const secret = document.getElementById("hbSecret");
+  if (!sensor) return;
 
-  const current = document.querySelector(".chapter.active");
-  const next = document.getElementById(`chapter-${chapterNum}`);
+  let holdTimer = null;
+  let vibrateInterval = null;
 
-  if (current) {
-    current.style.opacity = "0";
-    setTimeout(() => {
-      current.classList.remove("active");
-      if (next) {
-        next.classList.add("active");
-        setTimeout(() => {
-          next.style.opacity = "1";
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }, 30);
-      }
-    }, 450);
+  function startHold(e) {
+    if (e) e.preventDefault();
+    sensor.classList.add("holding");
+    label.textContent = "Keep holding… feeling the cosmos… 🫀";
+
+    if ("vibrate" in navigator) {
+      navigator.vibrate([40, 80, 40]);
+      vibrateInterval = setInterval(() => {
+        navigator.vibrate([40, 70, 40]);
+      }, 700);
+    }
+
+    holdTimer = setTimeout(() => {
+      sensor.classList.remove("holding");
+      clearInterval(vibrateInterval);
+      label.classList.add("hidden");
+      secret.classList.remove("hidden");
+      triggerStardustBurst(window.innerWidth / 2, window.innerHeight / 2);
+    }, 2800);
   }
+
+  function cancelHold() {
+    clearTimeout(holdTimer);
+    clearInterval(vibrateInterval);
+    sensor.classList.remove("holding");
+    if (secret.classList.contains("hidden")) {
+      label.textContent = "Hold thumb here for 3 seconds";
+    }
+  }
+
+  sensor.addEventListener("pointerdown", startHold);
+  sensor.addEventListener("pointerup", cancelHold);
+  sensor.addEventListener("pointerleave", cancelHold);
 }
 
 /* =========================================================================
-   MARVEL DOSSIER DECRYPT (CHAPTER 3)
+   LIVE TIME COUNTER SINCE AUGUST 8 (CHAPTER 3)
+   ========================================================================= */
+function initTimeElapsedCounter() {
+  const counterEl = document.getElementById("liveElapsedCounter");
+  if (!counterEl) return;
+
+  const originTime = new Date(COSMIC_CONFIG.originDate).getTime();
+
+  function update() {
+    const now = new Date().getTime();
+    const diff = now - originTime;
+
+    if (diff <= 0) {
+      counterEl.textContent = "August 8 • The moment it all began";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / 1000 / 60) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    counterEl.textContent = `${days}d • ${hours}h • ${minutes}m • ${seconds}s`;
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+
+/* =========================================================================
+   MARVEL CONFESSION PROOF (CHAPTER 3)
    ========================================================================= */
 function unlockDossier() {
   const front = document.getElementById("capsuleFront");
@@ -100,6 +374,28 @@ function unlockDossier() {
   front.classList.add("hidden");
   back.classList.remove("hidden");
   triggerShootingStar();
+}
+
+/* =========================================================================
+   DRIFTING ADEY ABEBA PETALS (ENKUTATASH)
+   ========================================================================= */
+function initAdeyPetals() {
+  const holder = document.getElementById("petalsHolder");
+  if (!holder) return;
+
+  setInterval(() => {
+    const activeCh = document.querySelector(".chapter.active");
+    if (!activeCh || (activeCh.id !== "chapter-6" && activeCh.id !== "chapter-voice" && activeCh.id !== "chapter-7")) return;
+
+    const petal = document.createElement("div");
+    petal.className = "adey-petal";
+    petal.style.left = `${Math.random() * 100}vw`;
+    petal.style.animationDuration = `${Math.random() * 4 + 6}s`;
+    petal.style.transform = `scale(${Math.random() * 0.6 + 0.7})`;
+    holder.appendChild(petal);
+
+    setTimeout(() => petal.remove(), 9000);
+  }, 900);
 }
 
 /* =========================================================================
@@ -136,7 +432,6 @@ function closeLightbox(e) {
   }
 }
 
-// Build Fragment 3: Tap to Reveal Stardust Cards
 function buildReasons() {
   const holder = document.getElementById("revealCardsHolder");
   if (!holder) return;
@@ -158,49 +453,7 @@ function buildReasons() {
 }
 
 /* =========================================================================
-   AUDIO PLAYER SYSTEM (DIRECT TO audio/song.mp3)
-   ========================================================================= */
-let isAudioPlaying = false;
-let audioInstance = null;
-
-function initAudioPlayer() {
-  audioInstance = document.getElementById("cosmicAudio");
-  if (audioInstance && COSMIC_CONFIG.audioSrc) {
-    audioInstance.src = COSMIC_CONFIG.audioSrc;
-  }
-  const widget = document.getElementById("musicWidget");
-  if (widget) {
-    widget.addEventListener("click", toggleAudioPlayback);
-  }
-}
-
-function toggleAudioPlayback() {
-  if (!audioInstance) return;
-  const widget = document.getElementById("musicWidget");
-  const vinyl = document.getElementById("vinylCore");
-  const triggerBtn = document.getElementById("playTrigger");
-  const caption = document.getElementById("audioCaption");
-
-  if (!isAudioPlaying) {
-    audioInstance.play().then(() => {
-      isAudioPlaying = true;
-      widget.classList.add("playing");
-      if (caption) caption.textContent = "Sure Thing";
-      if (vinyl) vinyl.classList.add("spinning");
-      if (triggerBtn) triggerBtn.textContent = "Pause Song";
-    }).catch(err => console.log("Audio waiting for user gesture.", err));
-  } else {
-    audioInstance.pause();
-    isAudioPlaying = false;
-    widget.classList.remove("playing");
-    if (caption) caption.textContent = "Play Song";
-    if (vinyl) vinyl.classList.remove("spinning");
-    if (triggerBtn) triggerBtn.textContent = "Play Song";
-  }
-}
-
-/* =========================================================================
-   CHAPTER 5: 5-STAGE EVASIVE "NO" BUTTON & REWARDS
+   CHAPTER 5: 5-STAGE EVASIVE "NO" BUTTON
    ========================================================================= */
 let evasionStage = 0;
 
@@ -225,7 +478,6 @@ function initEvasiveNo() {
     noBtn.style.top = `${targetY}px`;
     noBtn.style.zIndex = "99";
 
-    // Progressive Banter
     if (evasionStage <= COSMIC_CONFIG.evasiveBanter.length) {
       dialogue.textContent = COSMIC_CONFIG.evasiveBanter[evasionStage - 1];
     }
@@ -248,7 +500,6 @@ function initEvasiveNo() {
   noBtn.addEventListener("touchstart", dodge, { passive: false });
 }
 
-// Victory triggers the Digital Kiss Popup
 function handleYesVictory() {
   triggerStardustBurst(window.innerWidth / 2, window.innerHeight / 2);
   const dialogue = document.getElementById("evasionDialogue");
@@ -259,40 +510,59 @@ function handleYesVictory() {
   }, 900);
 }
 
-// Digital Kiss Tap
-function plantKiss() {
-  triggerStardustBurst(window.innerWidth / 2, window.innerHeight / 2);
+/* =========================================================================
+   FULL-SCREEN DIGITAL KISS BURST
+   ========================================================================= */
+function plantFullscreenKisses() {
+  if ("vibrate" in navigator) navigator.vibrate([50, 40, 50, 40, 80]);
+
+  for (let i = 0; i < 18; i++) {
+    const kiss = document.createElement("div");
+    kiss.className = "screen-kiss-stamp";
+    kiss.textContent = "💋";
+    kiss.style.left = `${Math.random() * 85 + 5}vw`;
+    kiss.style.top = `${Math.random() * 80 + 10}vh`;
+    kiss.style.setProperty("--rot", `${(Math.random() - 0.5) * 60}deg`);
+    document.body.appendChild(kiss);
+
+    setTimeout(() => kiss.remove(), 1900);
+  }
+
   const mark = document.querySelector(".interactive-kiss-mark");
-  mark.style.transform = "scale(1.6) rotate(-10deg)";
-  setTimeout(() => {
-    mark.style.transform = "scale(1)";
-  }, 300);
+  mark.style.transform = "scale(1.8) rotate(-12deg)";
+  setTimeout(() => { mark.style.transform = "scale(1)"; }, 300);
 }
 
-// Proceed from Kiss to Hug Popup
-function openHugReward() {
+function finishKissAndOpenLetter() {
   document.getElementById("kissOverlay").classList.remove("active");
-  document.getElementById("hugOverlay").classList.add("active");
-}
-
-// Digital Hug Tap
-function triggerWarmth() {
-  triggerStardustBurst(window.innerWidth / 2, window.innerHeight / 2);
-  const ring = document.querySelector(".warmth-ring");
-  ring.style.animation = "none";
-  void ring.offsetWidth;
-  ring.style.animation = "pulseWarmth 1s 2 ease-out";
-}
-
-// Proceed from Hug to Letter
-function finishRewardsAndOpenLetter() {
-  document.getElementById("hugOverlay").classList.remove("active");
   goToChapter(6);
 }
 
 /* =========================================================================
-   CHAPTER 7: WISH LAUNCH
+   CHAPTER 7: INTERACTIVE WISH INPUT & LAUNCH
    ========================================================================= */
+function launchCustomWish() {
+  const input = document.getElementById("userWishInput");
+  const wishText = input.value.trim();
+  
+  triggerShootingStar();
+  triggerStardustBurst(window.innerWidth / 2, window.innerHeight / 2);
+
+  const container = document.getElementById("wishInputContainer");
+  container.style.opacity = "0";
+  setTimeout(() => { container.classList.add("hidden"); }, 400);
+
+  const blessing = document.getElementById("blessingSection");
+  const ack = document.getElementById("wishAcknowledgment");
+  
+  if (wishText.length > 0) {
+    ack.innerHTML = `Your wish: <em>"${wishText}"</em> has been recorded somewhere out there in the cosmos.<br>I hope it includes me. 👀🤍`;
+  }
+  
+  blessing.classList.remove("hidden");
+  blessing.style.opacity = "1";
+}
+
 function launchShootingStar(starEl, e) {
   starEl.classList.add("shot");
   triggerStardustBurst(e.clientX, e.clientY);
@@ -305,7 +575,7 @@ function launchShootingStar(starEl, e) {
 }
 
 /* =========================================================================
-   CANVAS: ADDIS ABABA (LAT 9.0° N) NIGHT SKY MAP (SEP 10)
+   CANVAS: ADDIS ABABA (LAT 9.0° N) NIGHT SKY WITH ZOOM & PAN
    ========================================================================= */
 function initAddisAbabaSky() {
   const canvas = document.getElementById("universeCanvas");
@@ -342,7 +612,6 @@ function initAddisAbabaSky() {
     }
   }
 
-  // Interactive Touch Stardust
   function addDust(x, y) {
     for (let i = 0; i < 2; i++) {
       touchDust.push({
@@ -365,7 +634,7 @@ function initAddisAbabaSky() {
     shootingStars.push({
       x: Math.random() * w * 0.7,
       y: Math.random() * h * 0.3,
-      len: Math.random() * 100 + 70,
+      len: Math.random() * 110 + 70,
       spd: Math.random() * 9 + 14,
       ang: 36 * (Math.PI / 180),
       opacity: 1
@@ -379,7 +648,11 @@ function initAddisAbabaSky() {
   function render() {
     ctx.clearRect(0, 0, w, h);
 
-    // 1. Render Background Sky Stars
+    ctx.save();
+    ctx.translate(w / 2 + skyPanX, h / 2 + skyPanY);
+    ctx.scale(skyScale, skyScale);
+    ctx.translate(-w / 2, -h / 2);
+
     bgStars.forEach(s => {
       s.twinkle += s.speed;
       const a = s.alpha + Math.sin(s.twinkle) * 0.25;
@@ -389,7 +662,6 @@ function initAddisAbabaSky() {
       ctx.fill();
     });
 
-    // 2. Draw Subtle Summer Triangle Constellation Lines
     const triangle = addisSkyObjects.summerTriangle;
     ctx.strokeStyle = "rgba(168, 85, 247, 0.25)";
     ctx.lineWidth = 1;
@@ -402,7 +674,6 @@ function initAddisAbabaSky() {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // 3. Draw Summer Triangle Major Stars
     triangle.forEach(star => {
       const sx = star.xR * w;
       const sy = star.yR * h;
@@ -425,7 +696,6 @@ function initAddisAbabaSky() {
       ctx.fillText(star.name, sx + 8, sy + 3);
     });
 
-    // 4. Draw Saturn
     const sat = addisSkyObjects.saturn;
     const satX = sat.xRatio * w;
     const satY = sat.yRatio * h;
@@ -445,25 +715,6 @@ function initAddisAbabaSky() {
     ctx.font = "9px Outfit, sans-serif";
     ctx.fillText(sat.label, satX + 10, satY + 4);
 
-    // 5. Render Touch Stardust Trail
-    for (let i = touchDust.length - 1; i >= 0; i--) {
-      const p = touchDust[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life -= 0.025;
-
-      if (p.life <= 0) {
-        touchDust.splice(i, 1);
-        continue;
-      }
-
-      ctx.fillStyle = `${p.color} ${p.life})`;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // 6. Render Shooting Stars
     for (let i = shootingStars.length - 1; i >= 0; i--) {
       const ss = shootingStars[i];
       const tailX = ss.x - Math.cos(ss.ang) * ss.len;
@@ -487,6 +738,25 @@ function initAddisAbabaSky() {
       if (ss.opacity <= 0 || ss.x > w || ss.y > h) {
         shootingStars.splice(i, 1);
       }
+    }
+
+    ctx.restore();
+
+    for (let i = touchDust.length - 1; i >= 0; i--) {
+      const p = touchDust[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= 0.025;
+
+      if (p.life <= 0) {
+        touchDust.splice(i, 1);
+        continue;
+      }
+
+      ctx.fillStyle = `${p.color} ${p.life})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     requestAnimationFrame(render);
