@@ -1421,28 +1421,21 @@ body.stargaze-active .midnight-toast {
   font-style: italic;
 }
 
-.screenshot-hint {
-  display: block;
-  font-size: 0.76rem;
-  color: var(--text-dim);
-  margin-top: 14px;
+.send-to-girl-hint {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(254, 240, 138, 0.3);
+  font-size: 0.95rem;
+  color: var(--gold-glow);
+  font-family: var(--font-sans);
   letter-spacing: 0.5px;
+  text-shadow: 0 0 10px rgba(254, 240, 138, 0.4);
+  animation: subtleGlow 2.5s infinite alternate ease-in-out;
 }
 
-.share-orbit-zone {
-  margin-top: 20px;
-}
-
-.save-sky-btn {
-  background: linear-gradient(135deg, rgba(234, 179, 8, 0.85) 0%, rgba(202, 138, 4, 0.85) 100%);
-  border: 1px solid rgba(254, 240, 138, 0.6);
-  box-shadow: 0 6px 25px rgba(234, 179, 8, 0.4);
-  font-weight: 600;
-  color: #03050c;
-}
-
-.save-sky-btn:hover {
-  box-shadow: 0 10px 35px rgba(234, 179, 8, 0.7);
+@keyframes subtleGlow {
+  0% { opacity: 0.85; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.02); }
 }
 
 .text-center { text-align: center; }

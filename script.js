@@ -65,42 +65,8 @@ function initEntranceExperience() {
   }, 4000);
 }
 
-/* =========================================================================
-   COPY SKY LINK TO CLIPBOARD
-   ========================================================================= */
-/* =========================================================================
-   ROBUST SAVE / SHARE SKY FEATURE
-   ========================================================================= */
-function copySkyLink() {
-  const shareData = {
-    title: "A Celestial Realm For Unique 🌌",
-    text: "Addis Ababa Night Sky • September 11 • For Unique 🤍",
-    url: window.location.href
-  };
 
-  // 1. Try native mobile share/save sheet (iOS / Android)
-  if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-    navigator.share(shareData).catch((err) => {
-      // User cancelled share, fallback to copy
-      fallbackClipboardCopy();
-    });
-  } else {
-    // 2. Fallback to direct clipboard copy
-    fallbackClipboardCopy();
-  }
-}
 
-function fallbackClipboardCopy() {
-  const url = window.location.href;
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(url)
-      .then(() => showActionToast("Saved to your orbit. Happy Birthday, Unique! 🤍"))
-      .catch(() => execCommandFallback(url));
-  } else {
-    execCommandFallback(url);
-  }
-}
 
 // Failsafe copy method for older mobile WebViews
 function execCommandFallback(text) {
@@ -120,16 +86,6 @@ function execCommandFallback(text) {
   }
 
   document.body.removeChild(tempInput);
-}
-
-function showActionToast(message) {
-  const toast = document.getElementById("actionToast");
-  const msgEl = document.getElementById("actionToastMsg");
-  if (!toast || !msgEl) return;
-
-  msgEl.textContent = message;
-  toast.classList.add("active");
-  setTimeout(() => toast.classList.remove("active"), 3500);
 }
 
 /* =========================================================================
