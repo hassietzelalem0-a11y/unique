@@ -42,6 +42,7 @@ body {
   height: 100vh;
   z-index: 0;
   cursor: grab;
+  touch-action: none !important;
 }
 
 body.stargaze-active #universeCanvas {
@@ -476,6 +477,16 @@ body.stargaze-active .reward-overlay {
 }
 
 /* Touch Heartbeat Component (Chapter 2) */
+.heartbeat-arena,
+.heartbeat-sensor,
+.hb-icon,
+.hb-label {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  touch-action: none !important;
+}
+
 .heartbeat-arena {
   margin: 25px auto 10px auto;
   text-align: center;
@@ -493,7 +504,6 @@ body.stargaze-active .reward-overlay {
   justify-content: center;
   cursor: pointer;
   position: relative;
-  touch-action: none;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 0 20px rgba(244, 63, 94, 0.4);
   transition: transform 0.2s;
@@ -531,6 +541,7 @@ body.stargaze-active .reward-overlay {
 .hb-icon {
   font-size: 2rem;
   z-index: 2;
+  pointer-events: none;
 }
 
 .hb-label {

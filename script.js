@@ -106,131 +106,7 @@ function updateBackButton() {
 }
 
 /* =========================================================================
-   BACKGROUND AUDIO SYSTEM ("Sure Thing" - song.mp3)
-   ========================================================================= */
-let isAudioPlaying = false;
-let audioInstance = null;
-
-function initAudioPlayer() {
-  audioInstance = document.getElementById("cosmicAudio");
-  const widget = document.getElementById("musicWidget");
-  if (widget) {
-    widget.addEventListener("click", toggleAudioPlayback);
-  }
-}
-
-function toggleAudioPlayback() {
-  if (!audioInstance) audioInstance = document.getElementById("cosmicAudio");
-  if (!audioInstance) return;
-
-  const widget = document.getElementById("musicWidget");
-  const vinyl = document.getElementById("vinylCore");
-  const triggerBtn = document.getElementById("playTrigger");
-  const caption = document.getElementById("audioCaption");
-
-  if (!isAudioPlaying) {
-    // Explicitly load if in idle state
-    if (audioInstance.readyState === 0) {
-      audioInstance.load();
-    }
-    
-    audioInstance.play().then(() => {
-      isAudioPlaying = true;
-      if (widget) widget.classList.add("playing");
-      if (caption) caption.textContent = "Sure Thing";
-      if (vinyl) vinyl.classList.add("spinning");
-      if (triggerBtn) triggerBtn.textContent = "Pause Song";
-    }).catch(err => {
-      console.error("Audio playback error:", err);
-      alert("Please ensure audio/song.mp3 exists in your repository.");
-    });
-  } else {
-    audioInstance.pause();
-    isAudioPlaying = false;
-    if (widget) widget.classList.remove("playing");
-    if (caption) caption.textContent = "Play Song";
-    if (vinyl) vinyl.classList.remove("spinning");
-    if (triggerBtn) triggerBtn.textContent = "Play Song";
-  }
-}
-
-/* =========================================================================
-   DEDICATED VOICE NOTE SYSTEM (voicenote.m4a)
-   ========================================================================= */
-let isDedicatedVoicePlaying = false;
-let dedicatedVoice = null;
-
-function initDedicatedVoiceNotePlayer() {
-  dedicatedVoice = document.getElementById("voiceNoteAudio");
-  if (!dedicatedVoice) return;
-
-  dedicatedVoice.addEventListener("timeupdate", () => {
-    const cur = Math.floor(dedicatedVoice.currentTime);
-    const total = Math.floor(dedicatedVoice.duration) || 0;
-    const progressEl = document.getElementById("voiceProgress");
-    if (progressEl) {
-      const min = Math.floor(cur / 60);
-      const sec = (cur % 60).toString().padStart(2, "0");
-      progressEl.textContent = `${min}:${sec} / Playing Hassiet's voice...`;
-    }
-  });
-
-  dedicatedVoice.addEventListener("ended", () => {
-    isDedicatedVoicePlaying = false;
-    const card = document.querySelector(".voice-card-standout");
-    const btn = document.getElementById("standaloneVoiceBtn");
-    const proceed = document.getElementById("proceedToWishBtn");
-
-    if (card) card.classList.remove("playing");
-    if (btn) btn.textContent = "Replay Voice Note";
-    if (proceed) proceed.classList.remove("hidden");
-
-    if (audioInstance && isAudioPlaying) {
-      audioInstance.volume = 1.0;
-    }
-  });
-}
-
-function toggleDedicatedVoiceNote() {
-  if (!dedicatedVoice) dedicatedVoice = document.getElementById("voiceNoteAudio");
-  if (!dedicatedVoice) return;
-
-  const card = document.querySelector(".voice-card-standout");
-  const btn = document.getElementById("standaloneVoiceBtn");
-  const proceed = document.getElementById("proceedToWishBtn");
-
-  if (!isDedicatedVoicePlaying) {
-    if (dedicatedVoice.readyState === 0) {
-      dedicatedVoice.load();
-    }
-
-    if (audioInstance && isAudioPlaying) {
-      audioInstance.volume = 0.2;
-    }
-
-    dedicatedVoice.play().then(() => {
-      isDedicatedVoicePlaying = true;
-      if (card) card.classList.add("playing");
-      if (btn) btn.textContent = "Pause";
-      if (proceed) proceed.classList.remove("hidden");
-    }).catch(err => {
-      console.error("Voice note error:", err);
-      alert("Please ensure audio/voicenote.m4a exists in your repository.");
-    });
-  } else {
-    dedicatedVoice.pause();
-    isDedicatedVoicePlaying = false;
-    if (card) card.classList.remove("playing");
-    if (btn) btn.textContent = "Resume Voice Note";
-
-    if (audioInstance && isAudioPlaying) {
-      audioInstance.volume = 1.0;
-    }
-  }
-}
-
-/* =========================================================================
-   ZOOMABLE & PANNABLE STARGAZE SKY MODE + DOUBLE-TAP RETURN
+   ZOOMABLE & PANNABLE STARGAZE SKY MODE (MOBILE 2-FINGER PINCH + PC WHEEL)
    ========================================================================= */
 let isStargazing = false;
 let skyScale = 1;
@@ -239,6 +115,8 @@ let skyPanY = 0;
 let isDragging = false;
 let startX, startY;
 let lastTap = 0;
+let initialPinchDistance = null;
+let startScale = 1;
 
 function toggleStargazeMode() {
   isStargazing = !isStargazing;
@@ -262,30 +140,53 @@ canvasEl.addEventListener("wheel", (e) => {
   skyScale = Math.min(Math.max(0.8, skyScale * zoomFactor), 3.5);
 }, { passive: false });
 
-canvasEl.addEventListener("pointerdown", (e) => {
+canvasEl.addEventListener("touchstart", (e) => {
   if (!isStargazing) return;
-  
-  const now = new Date().getTime();
-  const timesince = now - lastTap;
-  if (timesince < 300 && timesince > 0) {
-    toggleStargazeMode();
-    return;
+
+  if (e.touches.length === 1) {
+    const now = new Date().getTime();
+    const timesince = now - lastTap;
+    if (timesince < 300 && timesince > 0) {
+      toggleStargazeMode();
+      return;
+    }
+    lastTap = now;
+
+    isDragging = true;
+    startX = e.touches[0].clientX - skyPanX;
+    startY = e.touches[0].clientY - skyPanY;
+  } else if (e.touches.length === 2) {
+    isDragging = false;
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    initialPinchDistance = Math.hypot(dx, dy);
+    startScale = skyScale;
   }
-  lastTap = now;
+}, { passive: false });
 
-  isDragging = true;
-  startX = e.clientX - skyPanX;
-  startY = e.clientY - skyPanY;
-});
+canvasEl.addEventListener("touchmove", (e) => {
+  if (!isStargazing) return;
+  e.preventDefault();
 
-window.addEventListener("pointermove", (e) => {
-  if (!isStargazing || !isDragging) return;
-  skyPanX = e.clientX - startX;
-  skyPanY = e.clientY - startY;
-});
+  if (e.touches.length === 1 && isDragging) {
+    skyPanX = e.touches[0].clientX - startX;
+    skyPanY = e.touches[0].clientY - startY;
+  } else if (e.touches.length === 2 && initialPinchDistance) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const currentDistance = Math.hypot(dx, dy);
+    const pinchFactor = currentDistance / initialPinchDistance;
+    skyScale = Math.min(Math.max(0.8, startScale * pinchFactor), 3.5);
+  }
+}, { passive: false });
 
-window.addEventListener("pointerup", () => {
-  isDragging = false;
+canvasEl.addEventListener("touchend", (e) => {
+  if (e.touches.length < 2) {
+    initialPinchDistance = null;
+  }
+  if (e.touches.length === 0) {
+    isDragging = false;
+  }
 });
 
 /* =========================================================================
@@ -450,6 +351,127 @@ function buildReasons() {
     });
     holder.appendChild(card);
   });
+}
+
+/* =========================================================================
+   BACKGROUND AUDIO SYSTEM ("Sure Thing" - song.mp3)
+   ========================================================================= */
+let isAudioPlaying = false;
+let audioInstance = null;
+
+function initAudioPlayer() {
+  audioInstance = document.getElementById("cosmicAudio");
+  const widget = document.getElementById("musicWidget");
+  if (widget) {
+    widget.addEventListener("click", toggleAudioPlayback);
+  }
+}
+
+function toggleAudioPlayback() {
+  if (!audioInstance) audioInstance = document.getElementById("cosmicAudio");
+  if (!audioInstance) return;
+
+  const widget = document.getElementById("musicWidget");
+  const vinyl = document.getElementById("vinylCore");
+  const triggerBtn = document.getElementById("playTrigger");
+  const caption = document.getElementById("audioCaption");
+
+  if (!isAudioPlaying) {
+    if (audioInstance.readyState === 0) {
+      audioInstance.load();
+    }
+    
+    audioInstance.play().then(() => {
+      isAudioPlaying = true;
+      if (widget) widget.classList.add("playing");
+      if (caption) caption.textContent = "Sure Thing";
+      if (vinyl) vinyl.classList.add("spinning");
+      if (triggerBtn) triggerBtn.textContent = "Pause Song";
+    }).catch(err => {
+      console.error("Audio playback error:", err);
+    });
+  } else {
+    audioInstance.pause();
+    isAudioPlaying = false;
+    if (widget) widget.classList.remove("playing");
+    if (caption) caption.textContent = "Play Song";
+    if (vinyl) vinyl.classList.remove("spinning");
+    if (triggerBtn) triggerBtn.textContent = "Play Song";
+  }
+}
+
+/* =========================================================================
+   DEDICATED VOICE NOTE SYSTEM (voicenote.mp3)
+   ========================================================================= */
+let isDedicatedVoicePlaying = false;
+let dedicatedVoice = null;
+
+function initDedicatedVoiceNotePlayer() {
+  dedicatedVoice = document.getElementById("voiceNoteAudio");
+  if (!dedicatedVoice) return;
+
+  dedicatedVoice.addEventListener("timeupdate", () => {
+    const cur = Math.floor(dedicatedVoice.currentTime);
+    const total = Math.floor(dedicatedVoice.duration) || 0;
+    const progressEl = document.getElementById("voiceProgress");
+    if (progressEl) {
+      const min = Math.floor(cur / 60);
+      const sec = (cur % 60).toString().padStart(2, "0");
+      progressEl.textContent = `${min}:${sec} / Playing Hassiet's voice...`;
+    }
+  });
+
+  dedicatedVoice.addEventListener("ended", () => {
+    isDedicatedVoicePlaying = false;
+    const card = document.querySelector(".voice-card-standout");
+    const btn = document.getElementById("standaloneVoiceBtn");
+    const proceed = document.getElementById("proceedToWishBtn");
+
+    if (card) card.classList.remove("playing");
+    if (btn) btn.textContent = "Replay Voice Note";
+    if (proceed) proceed.classList.remove("hidden");
+
+    if (audioInstance && isAudioPlaying) {
+      audioInstance.volume = 1.0;
+    }
+  });
+}
+
+function toggleDedicatedVoiceNote() {
+  if (!dedicatedVoice) dedicatedVoice = document.getElementById("voiceNoteAudio");
+  if (!dedicatedVoice) return;
+
+  const card = document.querySelector(".voice-card-standout");
+  const btn = document.getElementById("standaloneVoiceBtn");
+  const proceed = document.getElementById("proceedToWishBtn");
+
+  if (!isDedicatedVoicePlaying) {
+    if (dedicatedVoice.readyState === 0) {
+      dedicatedVoice.load();
+    }
+
+    if (audioInstance && isAudioPlaying) {
+      audioInstance.volume = 0.2;
+    }
+
+    dedicatedVoice.play().then(() => {
+      isDedicatedVoicePlaying = true;
+      if (card) card.classList.add("playing");
+      if (btn) btn.textContent = "Pause";
+      if (proceed) proceed.classList.remove("hidden");
+    }).catch(err => {
+      console.error("Voice note error:", err);
+    });
+  } else {
+    dedicatedVoice.pause();
+    isDedicatedVoicePlaying = false;
+    if (card) card.classList.remove("playing");
+    if (btn) btn.textContent = "Resume Voice Note";
+
+    if (audioInstance && isAudioPlaying) {
+      audioInstance.volume = 1.0;
+    }
+  }
 }
 
 /* =========================================================================
