@@ -32,6 +32,7 @@ let navigationHistory = [1];
    INITIALIZATION
    ========================================================================= */
 document.addEventListener("DOMContentLoaded", () => {
+  initEntranceExperience();
   initAddisAbabaSky();
   buildReasons();
   initEvasiveNo();
@@ -42,6 +43,49 @@ document.addEventListener("DOMContentLoaded", () => {
   initAdeyPetals();
   updateBackButton();
 });
+
+/* =========================================================================
+   ENTRANCE OVERLAY & MIDNIGHT TOAST
+   ========================================================================= */
+function initEntranceExperience() {
+  const splash = document.getElementById("entranceSplash");
+  const toast = document.getElementById("midnightToast");
+
+  // Automatically fade out ambient splash after 2.8 seconds
+  setTimeout(() => {
+    if (splash) splash.classList.add("fade-out");
+
+    // Display midnight broadcast toast shortly after
+    setTimeout(() => {
+      if (toast) {
+        toast.classList.add("active");
+        setTimeout(() => toast.classList.remove("active"), 5000);
+      }
+    }, 600);
+  }, 2800);
+}
+
+/* =========================================================================
+   COPY SKY LINK TO CLIPBOARD
+   ========================================================================= */
+function copySkyLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    showActionToast("Saved to your orbit. Happy Birthday, Unique! 🤍");
+  }).catch(() => {
+    showActionToast("Website link ready to save! 🌌");
+  });
+}
+
+function showActionToast(message) {
+  const toast = document.getElementById("actionToast");
+  const msgEl = document.getElementById("actionToastMsg");
+  if (!toast || !msgEl) return;
+
+  msgEl.textContent = message;
+  toast.classList.add("active");
+  setTimeout(() => toast.classList.remove("active"), 3200);
+}
 
 /* =========================================================================
    UNIVERSAL CHAPTER NAVIGATION & BACK BUTTON LOGIC

@@ -13,6 +13,26 @@
 </head>
 <body>
 
+  <!-- Ambient Entrance Splash Overlay (Pulses & fades automatically) -->
+  <div class="entrance-splash" id="entranceSplash">
+    <div class="splash-box">
+      <span class="splash-icon">🎧</span>
+      <h2 class="cinzel-title">A Midnight Transmission</h2>
+      <p class="splash-text">Plug in your headphones, turn off the room lights, start the music at the top, and step in.</p>
+      <div class="splash-pulse-ring"></div>
+    </div>
+  </div>
+
+  <!-- Midnight Broadcast Toast Notification -->
+  <div class="midnight-toast" id="midnightToast">
+    <span>✨ Midnight broadcast locked • Best experienced with headphones on 🎧</span>
+  </div>
+
+  <!-- Floating Toast Notification (Copy Link / General) -->
+  <div class="action-toast" id="actionToast">
+    <span id="actionToastMsg">Saved to your orbit. Happy Birthday, Unique! 🤍</span>
+  </div>
+
   <!-- Sky Canvas: Addis Ababa Celestial Simulation -->
   <canvas id="universeCanvas"></canvas>
   <div class="cosmic-dust-overlay"></div>
@@ -379,7 +399,7 @@
     </div>
   </section>
 
-  <!-- CHAPTER 7: WISH UPON A STAR -->
+  <!-- CHAPTER 7: WISH UPON A STAR & THE SCREENSHOT CARD -->
   <section class="chapter" id="chapter-7">
     <div class="nebula-glass-card text-center finale-card">
       <h2 class="cinzel-title">Make a wish. ⭐</h2>
@@ -402,7 +422,26 @@
         <p class="luminous-line" id="wishAcknowledgment">I hope at least one of your wishes comes true.</p>
         <p class="luminous-line">And maybe… I'll get to be part of some of your favorite memories this year. 🤍</p>
         <h3 class="cinzel-title gold-title">Happy Birthday, Unique. 🌌✨</h3>
-        <p class="cosmic-infinity">August 8 → September 11 → ∞</p>
+        
+        <!-- Screenshot Keepsake Frame -->
+        <div class="keepsake-frame" id="keepsakeCard">
+          <div class="keepsake-header">
+            <span class="orbit-badge">CELESTIAL ARCHIVE</span>
+            <span class="orbit-coords">Addis Ababa • 9°01'N</span>
+          </div>
+          <h4 class="keepsake-title">Unique's Personal Orbit</h4>
+          <p class="keepsake-date">መስከረም 1 • September 11</p>
+          <div class="keepsake-quote">August 8 → September 11 → ∞</div>
+          <p class="keepsake-subtext">Engineered with starlight by Hassiet 🤍</p>
+          <small class="screenshot-hint">📸 Screenshot to keep in your camera roll</small>
+        </div>
+
+        <!-- Copy Link Button -->
+        <div class="share-orbit-zone">
+          <button class="orb-btn mini-btn save-sky-btn glow-spin" onclick="copySkyLink()">
+            Save this sky 🌌
+          </button>
+        </div>
       </div>
     </div>
   </section>
